@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartivo Agency | Digital Studio — Illuminated Luxury Visuals</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
+            }
+        }
+    </script>
+    <style>
+        /* (same as previous – copy the full CSS from the previous message) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #0B0A0F;
+            font-family: 'Inter', sans-serif;
+            color: #FFFFFF;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.045'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            opacity: 0.55;
+            mix-blend-mode: overlay;
+            pointer-events: none;
+        }
+        .fade-up {
+            opacity: 0;
+            transform: translateY(35px);
+            transition: opacity 0.9s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.9s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+        section {
+            padding: 110px 0;
+            border-bottom: 1px solid rgba(0, 114, 255, 0.15);
+        }
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(18px);
+            background: rgba(11, 10, 15, 0.7);
+            border-bottom: 1px solid rgba(0, 114, 255, 0.5);
+            box-shadow: 0 0 15px rgba(0, 114, 255, 0.2);
+            padding: 16px 0;
+        }
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+        .logo {
+            font-size: 1.9rem;
+            font-weight: 800;
+            background: linear-gradient(125deg, #FFFFFF, #8A898F);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            text-shadow: 0 0 5px rgba(0, 114, 255, 0.3);
+        }
+        .header-actions {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+        }
+        .header-icon {
+            color: #8A898F;
+            font-size: 1.5rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .header-icon:hover {
+            color: #00C6FF;
+            transform: translateY(-2px);
+            filter: drop-shadow(0 0 6px #0072FF);
+        }
+        .contact-header {
+            background: linear-gradient(135deg, rgba(0, 114, 255, 0.3), rgba(0, 198, 255, 0.15));
+            backdrop-filter: blur(8px);
+            padding: 8px 26px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: 0.25s;
+            cursor: pointer;
+            border: 1px solid rgba(0, 114, 255, 0.8);
+            letter-spacing: 0.3px;
+            box-shadow: 0 0 8px rgba(0, 114, 255, 0.3);
+        }
+        .contact-header:hover {
+            background: #0072FF40;
+            border-color: #00C6FF;
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(0, 114, 255, 0.6);
+        }
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(135deg, rgba(0, 114, 255, 0.25), rgba(0, 198, 255, 0.1));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 114, 255, 0.7);
+            border-radius: 60px;
+            padding: 14px 34px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            box-shadow: 0 4px 12px rgba(0, 114, 255, 0.2);
+        }
+        .btn-primary:hover {
+            transform: scale(1.02) translateY(-2px);
+            box-shadow: 0 12px 28px -8px rgba(0, 114, 255, 0.7);
+            border-color: #00C6FF;
+            text-shadow: 0 0 4px #00C6FF;
+        }
+        .btn-solid {
+            background: linear-gradient(105deg, #0072FF, #00C6FF);
+            border: none;
+            box-shadow: 0 8px 20px rgba(0, 114, 255, 0.5);
+        }
+        .btn-solid:hover {
+            box-shadow: 0 12px 28px rgba(0, 114, 255, 0.8);
+        }
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+            min-height: 85vh;
+        }
+        .hero-left h1 {
+            font-size: clamp(48px, 6vw, 70px);
+            font-weight: 800;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #FFFFFF 70%, #8A898F 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(0, 198, 255, 0.3);
+        }
+        .hero-sub {
+            font-size: 1.2rem;
+            color: #B0B0C0;
+            margin: 28px 0 32px;
+            line-height: 1.5;
+        }
+        .micro-cta {
+            font-size: 0.8rem;
+            color: #8A898F;
+            margin-top: 18px;
+        }
+        #hero-canvas {
+            width: 100%;
+            height: 480px;
+            border-radius: 42px;
+            filter: drop-shadow(0 0 25px rgba(0, 114, 255, 0.4));
+        }
+        .section-title {
+            font-size: 38px;
+            font-weight: 700;
+            text-align: center;
+            background: linear-gradient(120deg, #FFFFFF, #8A898F);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 64px;
+            text-shadow: 0 0 8px rgba(0, 114, 255, 0.3);
+        }
+        .pipeline-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            justify-content: center;
+        }
+        .pipeline-card {
+            background: rgba(26, 25, 31, 0.9);
+            backdrop-filter: blur(4px);
+            border-radius: 32px;
+            padding: 42px 28px;
+            flex: 1;
+            min-width: 260px;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid rgba(0, 114, 255, 0.3);
+            box-shadow: 0 20px 35px -20px rgba(0,0,0,0.6);
+            transform-style: preserve-3d;
+        }
+        .pipeline-card:hover {
+            transform: translateY(-10px);
+            border-color: #00C6FF;
+            box-shadow: 0 0 20px rgba(0, 114, 255, 0.5), 0 25px 45px -12px rgba(0, 114, 255, 0.35);
+        }
+        .card-step {
+            font-size: 13px;
+            letter-spacing: 2px;
+            color: #00C6FF;
+            font-weight: 600;
+            margin-bottom: 24px;
+            text-shadow: 0 0 4px #0072FF;
+        }
+        .pipeline-card h3 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+        .pipeline-card p {
+            color: #B0B0C0;
+            line-height: 1.5;
+        }
+        .why-grid {
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .why-item {
+            background: rgba(26, 25, 31, 0.7);
+            backdrop-filter: blur(6px);
+            border-radius: 32px;
+            padding: 32px 28px;
+            text-align: center;
+            flex: 1;
+            min-width: 220px;
+            border: 1px solid rgba(0, 114, 255, 0.3);
+            transition: all 0.3s;
+        }
+        .why-item:hover {
+            transform: translateY(-8px);
+            border-color: #00C6FF;
+            box-shadow: 0 0 20px rgba(0, 114, 255, 0.4);
+        }
+        .why-icon {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #0072FF, #00C6FF);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 5px #0072FF);
+        }
+        .why-item h4 {
+            font-size: 1.6rem;
+            margin-bottom: 12px;
+        }
+        .pricing-card {
+            max-width: 760px;
+            margin: 0 auto;
+            background: rgba(26, 25, 31, 0.92);
+            backdrop-filter: blur(12px);
+            border-radius: 64px;
+            padding: 56px 48px;
+            position: relative;
+            border: 1px solid rgba(0, 114, 255, 0.5);
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(0, 114, 255, 0.3);
+        }
+        .glow-border::before {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            border-radius: 66px;
+            padding: 2px;
+            background: linear-gradient(90deg, #0072FF, #00C6FF, #0072FF);
+            background-size: 200% 200%;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: borderFlow 3s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes borderFlow {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
+        .price-big {
+            font-size: 80px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFFFFF, #B0B0C0);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            line-height: 1;
+            text-shadow: 0 0 8px rgba(0, 198, 255, 0.4);
+        }
+        .price-sub {
+            font-size: 24px;
+            color: #8A898F;
+        }
+        .feature-list {
+            list-style: none;
+            margin: 40px 0;
+        }
+        .feature-list li {
+            margin: 18px 0;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 1rem;
+            color: #ddd;
+        }
+        .feature-list i {
+            color: #00C6FF;
+            font-size: 1.3rem;
+            filter: drop-shadow(0 0 3px #0072FF);
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: start;
+        }
+        .form-left h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px rgba(0, 114, 255, 0.3);
+        }
+        .input-group {
+            margin-bottom: 24px;
+        }
+        input, .file-label, textarea {
+            width: 100%;
+            background: #1A191F;
+            border: 1px solid #2C2B32;
+            border-radius: 60px;
+            padding: 16px 24px;
+            font-size: 1rem;
+            color: white;
+            transition: 0.2s;
+        }
+        textarea {
+            border-radius: 28px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #0072FF;
+            box-shadow: 0 0 15px rgba(0, 114, 255, 0.5);
+        }
+        .file-label {
+            display: inline-block;
+            text-align: center;
+            cursor: pointer;
+        }
+        input[type="file"] { display: none; }
+        .submit-btn {
+            width: 100%;
+            margin-top: 12px;
+            background: #1A191F;
+            transition: all 0.3s;
+        }
+        .submit-btn.success-bg {
+            background: linear-gradient(95deg, #0072FF, #00C6FF);
+            border: none;
+            box-shadow: 0 0 18px #0072FF;
+        }
+        footer {
+            background: #0B0A0F;
+            padding: 60px 40px 40px;
+            border-top: 1px solid rgba(0, 114, 255, 0.3);
+            box-shadow: 0 -5px 20px rgba(0, 114, 255, 0.1);
+        }
+        .footer-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px;
+        }
+        .footer-col p {
+            color: #8A898F;
+            margin-top: 12px;
+            max-width: 280px;
+        }
+        .footer-col h4 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: #00C6FF;
+            text-shadow: 0 0 3px #0072FF;
+        }
+        .contact-links {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #B0B0C0;
+            transition: 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .contact-item i {
+            width: 28px;
+            color: #00C6FF;
+        }
+        .contact-item:hover {
+            color: #FFFFFF;
+            transform: translateX(4px);
+            text-shadow: 0 0 4px #00C6FF;
+        }
+        .message-area {
+            margin-top: 16px;
+        }
+        .message-area textarea {
+            width: 100%;
+            background: #1A191F;
+            border: 1px solid #0072FF;
+            border-radius: 28px;
+            padding: 12px 18px;
+            color: white;
+            font-family: inherit;
+            margin-bottom: 12px;
+        }
+        .signal-btn {
+            background: #1A191F;
+            border: 1px solid #00C6FF;
+            border-radius: 40px;
+            padding: 10px 18px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            color: white;
+            box-shadow: 0 0 5px rgba(0, 198, 255, 0.3);
+        }
+        .signal-btn:hover {
+            background: #0072FF20;
+            border-color: #0072FF;
+            box-shadow: 0 0 12px #0072FF;
+        }
+        .social-icons {
+            display: flex;
+            gap: 24px;
+            margin-top: 20px;
+        }
+        .social-icons a {
+            color: #8A898F;
+            font-size: 1.8rem;
+            transition: 0.2s;
+        }
+        .social-icons a:hover {
+            color: #00C6FF;
+            transform: translateY(-3px);
+            filter: drop-shadow(0 0 6px #0072FF);
+        }
+        .copyright {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(0, 114, 255, 0.2);
+            color: #5A5960;
+            font-size: 0.85rem;
+        }
+        @media (max-width: 992px) {
+            .hero-grid, .form-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+            .container, .header-inner { padding: 0 24px; }
+            section { padding: 80px 0; }
+            .pricing-card { padding: 40px 28px; }
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="header-inner">
+        <div class="logo">CARTIVO<span style="color:#0072FF; text-shadow:0 0 5px #0072FF;">●</span></div>
+        <div class="header-actions">
+            <i class="fab fa-instagram header-icon" id="headerInstagram" style="cursor:pointer;"></i>
+            <div class="contact-header" id="headerContactBtn">✦ Book a Discovery Call</div>
+        </div>
+    </div>
+</div>
+<main>
+    <section>
+        <div class="container hero-grid">
+            <div class="hero-left fade-up">
+                <h1>Luxury Visuals For Premium Local Brands.</h1>
+                <div class="hero-sub">We bypass traditional photo shoots. Our digital asset pipeline transforms raw smartphone snapshots into studio-grade media assets and high-converting copy daily.</div>
+                <button class="btn-primary" id="heroCtaBtn">Claim Your 2 Free Custom Mockups <i class="fas fa-arrow-right"></i></button>
+                <div class="micro-cta">No credit card required. Only 5 openings available this month.</div>
+            </div>
+            <div class="hero-right fade-up">
+                <div id="hero-canvas" style="width:100%; height:480px; border-radius: 32px; overflow:hidden;"></div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="container">
+            <div class="section-title fade-up">The Frictionless Media Pipeline</div>
+            <div class="pipeline-grid">
+                <div class="pipeline-card fade-up">
+                    <div class="card-step">01 / THE SNAPSHOT</div>
+                    <h3>Text Us The Raw Photo</h3>
+                    <p>Snap a quick picture of your product or workflow on your smartphone. Upload to our secure portal in under 5 seconds.</p>
+                </div>
+                <div class="pipeline-card fade-up">
+                    <div class="card-step">02 / STRUCTURAL RENDERING</div>
+                    <h3>Digital Asset Processing</h3>
+                    <p>Our studio strips messy environments. We execute spatial lighting, luxury backgrounds, and write high-converting copy.</p>
+                </div>
+                <div class="pipeline-card fade-up">
+                    <div class="card-step">03 / DEPLOY TO MARKET</div>
+                    <h3>Copy & Paste Launch</h3>
+                    <p>Receive flawless studio graphics & engaging caption within hours. Copy, paste, and watch your local engagement soar.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="container">
+            <div class="section-title fade-up">Why The Elite Trust Cartivo</div>
+            <div class="why-grid">
+                <div class="why-item fade-up">
+                    <div class="why-icon"><i class="fas fa-bolt"></i></div>
+                    <h4>Lightning Speed</h4>
+                    <p>24h turnaround from raw image to studio-grade final.</p>
+                </div>
+                <div class="why-item fade-up">
+                    <div class="why-icon"><i class="fas fa-gem"></i></div>
+                    <h4>Premium Quality</h4>
+                    <p>Cinematic lighting, 3D spatial enhancement & luxury compositing.</p>
+                </div>
+                <div class="why-item fade-up">
+                    <div class="why-icon"><i class="fas fa-chart-line"></i></div>
+                    <h4>High Conversion</h4>
+                    <p>Data-driven copy + local hashtags that drive engagement.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="container">
+            <div class="section-title fade-up">A Fractional Creative Department</div>
+            <div class="pricing-card glow-border fade-up">
+                <div style="text-align:center;">
+                    <span class="price-big">1,000</span><span class="price-sub"> / Month</span>
+                </div>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check-circle"></i> Up to 2 Premium Image Renderings Per Business Day</li>
+                    <li><i class="fas fa-check-circle"></i> Complete Background Removals & Custom Lighting Scripts</li>
+                    <li><i class="fas fa-check-circle"></i> High-Converting Captions, Hooks & Local Hashtags</li>
+                    <li><i class="fas fa-check-circle"></i> Guaranteed 24-Hour Turnaround Times</li>
+                    <li><i class="fas fa-check-circle"></i> Dedicated Google Drive Hub & WhatsApp Line</li>
+                    <li><i class="fas fa-check-circle"></i> Zero Long-Term Contracts (Cancel Anytime)</li>
+                </ul>
+                <div style="text-align:center;">
+                    <button class="btn-primary btn-solid" id="pricingCta">Secure Your Retainer Spot</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="container form-grid">
+            <div class="form-left fade-up">
+                <h2>Let Us Create Your Portfolio Sample For Free.</h2>
+                <p style="color:#B0B0C0; margin-top: 18px;">We'll process your first two smartphone images completely free. Fill out the application, and our studio will reach out within 12h.</p>
+            </div>
+            <div class="form-right fade-up">
+                <form id="applicationForm" enctype="multipart/form-data">
+                    <div class="input-group"><input type="text" placeholder="Business Name *" id="businessName" required></div>
+                    <div class="input-group"><input type="text" placeholder="Instagram Handle (@) *" id="instagramHandle" required></div>
+                    <div class="input-group"><input type="email" placeholder="Contact Email Address *" id="contactEmail" required></div>
+                    <div class="input-group"><textarea rows="2" placeholder="Anything else you'd like us to know? (Special requests, project ideas, goals...) *" id="specialRequest" required></textarea></div>
+                    <div class="input-group">
+                        <label class="file-label" for="rawImageUpload"><i class="fas fa-cloud-upload-alt"></i> Upload Raw Image File *</label>
+                        <input type="file" id="rawImageUpload" accept="image/*" required>
+                    </div>
+                    <button type="submit" class="btn-primary submit-btn" id="formSubmitBtn">Submit Free Application</button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+<footer>
+    <div class="footer-container">
+        <div class="footer-col">
+            <div class="logo" style="font-size: 1.8rem;">CARTIVO</div>
+            <p>Luxury digital studio empowering local brands with cinematic visuals & conversion copy.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Contact & Signal</h4>
+            <div class="contact-links">
+                <a href="mailto:info@CartivoAgency.com" class="contact-item" id="emailLink"><i class="fas fa-envelope"></i> info@CartivoAgency.com</a>
+                <a href="tel:+19382624432" class="contact-item" id="phoneLink"><i class="fas fa-phone-alt"></i> +1 (938) 262-4432</a>
+                <div class="contact-item" id="signalTrigger" style="cursor:pointer;"><i class="fab fa-signal-messenger"></i> Signal: @cartivo.agency</div>
+            </div>
+            <div class="message-area">
+                <textarea rows="2" placeholder="Text us about something — your idea, project, or just a question..." id="footerMessage"></textarea>
+                <div class="signal-btn" id="sendSignalMsg"><i class="fab fa-signal-messenger"></i> Send via Signal</div>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>Follow & Email</h4>
+            <div class="social-icons">
+                <a href="#" id="instaFooterLink" class="fab fa-instagram"></a>
+                <a href="#" id="mailFooterLink" class="fas fa-envelope"></a>
+                <a href="#" id="twitterFooterLink" class="fab fa-x-twitter"></a>
+            </div>
+            <p style="margin-top: 24px; font-size: 0.8rem;">Direct creative inquiries: <br> <strong style="color:#00C6FF;">studio@CartivoAgency.com</strong></p>
+        </div>
+    </div>
+    <div class="copyright">
+        Copyright 2026 Cartivo Agency. All rights reserved. Private Client Support: info@CartivoAgency.com
+    </div>
+</footer>
+<script type="module">
+    import * as THREE from 'three';
+    const canvasDiv = document.getElementById('hero-canvas');
+    const scene = new THREE.Scene();
+    scene.background = null;
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+    camera.position.set(0, 1.2, 5.2);
+    camera.lookAt(0, 0, 0);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(canvasDiv.clientWidth, 480);
+    renderer.shadowMap.enabled = true;
+    canvasDiv.appendChild(renderer.domElement);
+    const ambient = new THREE.AmbientLight(0x404060);
+    scene.add(ambient);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1.3);
+    dirLight.position.set(2, 4, 3);
+    dirLight.castShadow = true;
+    scene.add(dirLight);
+    const fillLight = new THREE.PointLight(0x2266ff, 0.7);
+    fillLight.position.set(1, 1.5, 2);
+    scene.add(fillLight);
+    const backLight = new THREE.PointLight(0x00aaff, 0.6);
+    backLight.position.set(-1, 1, -2.5);
+    scene.add(backLight);
+    const rimLight = new THREE.PointLight(0x00c6ff, 0.5);
+    rimLight.position.set(1.5, 1, 2);
+    scene.add(rimLight);
+    const group = new THREE.Group();
+    const geometry = new THREE.TorusKnotGeometry(0.88, 0.21, 200, 28, 3, 4);
+    const material = new THREE.MeshStandardMaterial({ color: 0x1a6eff, metalness: 0.96, roughness: 0.22, emissive: 0x004488, emissiveIntensity: 0.35 });
+    const knot = new THREE.Mesh(geometry, material);
+    knot.castShadow = true;
+    group.add(knot);
+    const coreGeo = new THREE.IcosahedronGeometry(0.48, 0);
+    const coreMat = new THREE.MeshStandardMaterial({ color: 0x00a8ff, metalness: 0.9, roughness: 0.18, emissive: 0x0072ff, emissiveIntensity: 0.45 });
+    const core = new THREE.Mesh(coreGeo, coreMat);
+    group.add(core);
+    const ringGeo = new THREE.TorusGeometry(1.02, 0.055, 80, 240);
+    const ringMat = new THREE.MeshStandardMaterial({ color: 0x00c6ff, metalness: 0.98, roughness: 0.1, emissive: 0x0088ff, emissiveIntensity: 0.3 });
+    const ring = new THREE.Mesh(ringGeo, ringMat);
+    ring.rotation.x = Math.PI / 2;
+    group.add(ring);
+    scene.add(group);
+    const shadowPlane = new THREE.Mesh(new THREE.PlaneGeometry(2.8, 2.8), new THREE.ShadowMaterial({ opacity: 0.6, color: 0x000000, transparent: true, side: THREE.DoubleSide }));
+    shadowPlane.rotation.x = -Math.PI / 2;
+    shadowPlane.position.y = -1.15;
+    shadowPlane.receiveShadow = true;
+    scene.add(shadowPlane);
+    let time = 0;
+    function animate3D() {
+        requestAnimationFrame(animate3D);
+        time += 0.009;
+        group.rotation.y = time * 0.55;
+        group.rotation.x = Math.sin(time * 0.5) * 0.08;
+        group.position.y = Math.sin(time * 1.3) * 0.07;
+        renderer.render(scene, camera);
+    }
+    animate3D();
+    window.addEventListener('resize', () => { const w = canvasDiv.clientWidth; renderer.setSize(w, 480); camera.aspect = w / 480; camera.updateProjectionMatrix(); });
+    setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
+    // Form submission to backend
+    const form = document.getElementById('applicationForm');
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        try {
+            const res = await fetch('/api/leads', { method: 'POST', body: formData });
+            const data = await res.json();
+            if (data.success) {
+                alert('Thank you! Your free request has been submitted. We will contact you within 24h.');
+                form.reset();
+                document.querySelector('.file-label').innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Upload Raw Image File *';
+            } else {
+                alert('Error: ' + (data.error || 'Please try again.'));
+            }
+        } catch (err) {
+            alert('Network error. Please try again.');
+        }
+    });
+    // CTA scrolls
+    document.getElementById('heroCtaBtn').addEventListener('click', () => document.getElementById('applicationForm').scrollIntoView({ behavior: 'smooth', block: 'center' }));
+    document.getElementById('pricingCta').addEventListener('click', () => document.getElementById('applicationForm').scrollIntoView({ behavior: 'smooth' }));
+    document.getElementById('headerContactBtn').addEventListener('click', () => document.getElementById('applicationForm').scrollIntoView({ behavior: 'smooth' }));
+    // Signal & Instagram
+    const SIGNAL_LINK = "https://signal.me/#eu/V26clL-DZgJ9kmfCycGsb3G9JjHc54iJ1M7zAwu6L1HxXL4Bgz5F_47MKLspOTZt";
+    const INSTAGRAM_LINK = "https://www.instagram.com/cartvio.agency/";
+    function openSignalWithText(text) {
+        let link = SIGNAL_LINK;
+        if (text && text.trim()) link = SIGNAL_LINK + (SIGNAL_LINK.includes('?') ? '&' : '?') + 'text=' + encodeURIComponent(text);
+        window.open(link, '_blank');
+    }
+    document.getElementById('signalTrigger')?.addEventListener('click', () => openSignalWithText("Hello Cartivo, I'm interested in your luxury media services."));
+    document.getElementById('sendSignalMsg')?.addEventListener('click', () => {
+        const msg = document.getElementById('footerMessage').value.trim();
+        openSignalWithText(msg || "I have a project idea for Cartivo Agency.");
+    });
+    document.getElementById('emailLink')?.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'mailto:info@CartivoAgency.com'; });
+    document.getElementById('phoneLink')?.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'tel:+19382624432'; });
+    const openInstagram = () => window.open(INSTAGRAM_LINK, '_blank');
+    document.getElementById('headerInstagram')?.addEventListener('click', openInstagram);
+    document.getElementById('instaFooterLink')?.addEventListener('click', openInstagram);
+    document.getElementById('mailFooterLink')?.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'mailto:studio@CartivoAgency.com'; });
+    document.getElementById('twitterFooterLink')?.addEventListener('click', (e) => { e.preventDefault(); window.open('https://twitter.com/cartivoagency', '_blank'); });
+    // Visitor tracking
+    fetch('/api/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ page: window.location.pathname || '/' })
+    }).catch(() => {});
+    // fade-up observer
+    const faders = document.querySelectorAll('.fade-up');
+    const obs = new IntersectionObserver((entries) => { entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.15 });
+    faders.forEach(el => obs.observe(el));
+    faders.forEach(el => { if(el.getBoundingClientRect().top < window.innerHeight) el.classList.add('visible'); });
+    window.addEventListener('scroll', () => {
+        const canvasEl = document.getElementById('hero-canvas');
+        if(canvasEl && window.scrollY < 600) canvasEl.style.transform = `translateY(${window.scrollY * 0.02}px)`;
+        else if(canvasEl) canvasEl.style.transform = `translateY(0px)`;
+    });
+</script>
+</body>
+</html>
